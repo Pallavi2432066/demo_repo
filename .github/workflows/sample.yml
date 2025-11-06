@@ -1,0 +1,25 @@
+name: Sample Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  greet-init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello from Init
+        run: echo "Hello from init job 👋"
+
+  greet-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello from Build
+        run: echo "Hello from build job 👷‍♀️"
+
+  greet-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello from Deploy
+        run: echo "Hello from deploy job 🚀"
