@@ -1,0 +1,62 @@
+name: Backend Check Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  db-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DB Check
+        run: echo "DB connection OK ✅"
+
+  cache-check:
+    runs-on: ubuntu-latest
+    needs: db-check
+    steps:
+      - name: Cache Check
+        run: |
+          echo "Cache check failed ❌"
+          exit 1
+  api-check:
+    runs-on: ubuntu-latest
+    needs: cache-check
+    if: always()
+    steps:
+      - name: API Check
+        run: echo "API healthy ✅"
+
+  auth-check:
+    runs-on: ubuntu-latest
+    needs: api-check
+    if: always()
+    steps:
+      - name: Auth Check
+        run: |
+          echo "Auth service failed ❌"
+          exit 1
+  metrics-check:
+    runs-on: ubuntu-latest
+    needs: auth-check
+    if: always()
+    steps:
+      - name: Metrics Check
+        run: echo "Metrics OK ✅"
+
+  alert:
+    runs-on: ubuntu-latest
+    needs: metrics-check
+    if: always()
+    steps:
+      - name: Alert Ops
+        run: echo "Alert sent ✅"
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: alert
+    if: always()
+    steps:
+      - name: Notify
+        run: echo "Final notification ✅"
